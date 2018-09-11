@@ -1,0 +1,211 @@
+<!doctype html>
+
+<meta charset="utf-8">
+<title>Dagre D3 : provenance graph</title>
+
+<link rel="stylesheet" href="demo.css">
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="../build/dist/dagre-d3.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<h1>Dagre D3: provenance graph</h1>
+
+<!-- <button type="button" id="bar" href="#" onclick="temp()">Click Me!</button> -->
+
+
+
+
+<link rel="stylesheet" href="tipsy.css">
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="tipsy.js"></script>
+<script src="provgraph.js"></script>
+
+
+
+<style id="css">
+svg {
+    overflow: hidden;
+	width: 1000;
+	margin: left-side;	
+}
+
+.clusters rect {
+  fill: #00ffd0;
+  stroke: #999;
+  stroke-width: 1.5px;
+}
+
+text {
+  font-weight: 300;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
+  font-size: 14px;
+}
+
+.node rect {
+  stroke: #999;
+  fill: #87bbe1;
+  stroke-width: 1.5px;
+}
+
+
+.node ellipse {
+  stroke: #999;
+  fill: #f3db4a;
+  stroke-width: 1.5px;
+}
+
+.node polygon {
+  stroke: #999;
+  fill: #fff;
+  stroke-width: 1.5px;
+}
+
+.edgePath path {
+  stroke: #333;
+  stroke-width: 1.5px;
+}
+
+
+/* This styles the title of the tooltip */
+.tipsy tipsy-s{
+display: block;
+opacity: 1.0;
+fade: true;
+}
+
+
+
+
+/* This styles the body of the tooltip */
+.tipsy .description {
+  font-size: 1.2em;
+  
+}
+.tipsy-inner {
+    max-width: 500px;
+	height: relative;
+	text-align: center;
+	overflow: hidden;
+    /* If max-width does not work, try using width instead */
+    
+}
+
+/* This styles the title of the tooltip */
+.tipsy .name {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #60b1fc;
+  margin: 0;
+}
+
+
+
+
+</style>
+
+<svg id="svg" width="100%" height="100%" ></svg>
+
+<script type="text/javascript" src="article-prov1.json"></script>
+
+
+
+<script>
+var g = new dagreD3.graphlib.Graph({compound:true})
+  .setGraph({})
+  .setDefaultEdgeLabel(function() { return {}; });
+  
+//g.graph(); // returns undefined
+//var m = g.setGraph("graph-label");
+//g.graph(); // returns "graph-label" 
+
+
+
+var entityKeys = []
+var activityKeys = []
+var agentKeys = []
+var time = []
+var type = []
+var entdescrption = []
+
+createentity(val)
+activity(val)
+agent(val)
+//addNodes(val)
+wasDerivedFrom()
+wasAttributedTo()
+alternateOf()
+specializationOf()
+wasAssociatedWith()
+wasGeneratedBy()
+used()
+actedOnBehalfOf()
+
+// allnodes contains all the nodes from the graph
+var allnodes = [];
+allnodes = allnodes.concat(entityKeys, activityKeys, agentKeys, time, entdescrption);
+ 
+
+
+ 
+
+
+init(g);
+
+aa=0;
+
+function init(g) {
+
+
+ $('g.cluster').tipsy({ 
+        gravity: 's', 
+        html: true,
+		opacity: 0.8,
+		
+		title: function() {
+		    return tempw; 
+		}
+    });
+
+
+g.nodes().forEach(function(v) {
+  var node = g.node(v);
+  // Round the corners of the nodes
+  node.rx = node.ry = 5;
+});  
+// Create the renderer
+var render = new dagreD3.render();
+
+// Set up an SVG group so that we can translate the final graph.
+var svg = d3.select("svg"),
+    svgGroup = svg.append("g");
+
+// Run the renderer. This is what draws the final graph.
+render(d3.select("svg g"), g);
+
+// Center the graph
+var xCenterOffset = (svg.attr("width") - g.graph().width) / 4;
+svgGroup.attr("transform", "translate(" + xCenterOffset + ", 10)");
+svg.attr("height", g.graph().height + 10);
+
+
+
+
+
+
+
+
+
+	
+// Set up zoom support
+var svg = d3.select("svg"),
+
+    inner = d3.select("svg g"),
+    zoom = d3.behavior.zoom().on("zoom", function() {
+      inner.attr("transform", "translate(" + d3.event.translate + ")" +
+                                  "scale(" + d3.event.scale + ")");
+    });
+svg.call(zoom);
+}
+
+
+</script>
