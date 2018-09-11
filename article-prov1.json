@@ -1,0 +1,170 @@
+var val = {
+  "wasAssociatedWith": {
+    "_:id20": {
+      "prov:activity": "ex:compose",
+      "prov:agent": "ex:derek"
+    },
+    "_:id21": {
+      "prov:activity": "ex:illustrate",
+      "prov:agent": "ex:derek"
+    }
+  },
+  "actedOnBehalfOf": {
+    "_:id10": {
+      "prov:responsible": "ex:chartgen",
+      "prov:delegate": "ex:derek",
+      "prov:activity": "ex:compose"
+    }
+  },
+  "agent": {
+    "ex:derek": {
+      "foaf:givenName": "Derek",
+      "foaf:mbox": "<mailto:derek@example.org>",
+      "prov:type": {
+        "type": "prov:QUALIFIED_NAME",
+        "$": "prov:Person"
+      }
+    },
+    "ex:chartgen": {
+      "prov:type": {
+        "type": "prov:QUALIFIED_NAME",
+        "$": "prov:Organization"
+      },
+      "foaf:name": "Chart Generators Inc"
+    }
+  },
+  "specializationOf": {
+    "_:id14": {
+      "prov:specificEntity": "ex:articleV1",
+      "prov:generalEntity": "ex:article"
+    },
+    "_:id13": {
+      "prov:specificEntity": "ex:articleV2",
+      "prov:generalEntity": "ex:article"
+    }
+  },
+  "alternateOf": {
+    "_:id12": {
+      "prov:alternate2": "ex:articleV2",
+      "prov:alternate1": "ex:articleV1"
+    }
+  },
+  "wasAttributedTo": {
+    "_:id11": {
+      "prov:entity": "ex:chart1",
+      "prov:agent": "ex:derek"
+    }
+  },
+  "activity": {
+    "ex:compose": {},
+    "ex:illustrate": {},
+    "ex:compile2": {},
+    "ex:compile": {},
+    "ex:correct": {
+      "prov:endTime": "2012-04-01T15:21:00+01:00",
+      "prov:startTime": "2012-03-31T09:21:00+01:00"
+    }
+  },
+  "wasGeneratedBy": {
+    "_:id18": {
+      "prov:time": "2012-03-02T10:30:00+00:00",
+      "prov:entity": "ex:chart1",
+      "prov:activity": "ex:compile"
+    },
+    "_:id15": {
+      "prov:entity": "ex:dataSet2",
+      "prov:activity": "ex:correct"
+    },
+    "_:id19": {
+      "prov:entity": "ex:chart1",
+      "prov:activity": "ex:illustrate"
+    },
+    "_:id17": {
+      "prov:entity": "ex:composition",
+      "prov:activity": "ex:compose"
+    },
+    "_:id16": {
+      "prov:time": "2012-04-01T15:21:00+01:00",
+      "prov:entity": "ex:chart2",
+      "prov:activity": "ex:compile2"
+    }
+  },
+  "used": {
+    "_:id4": {
+      "prov:role": "ex:dataToCompose",
+      "prov:activity": "ex:compose",
+      "prov:entity": "ex:dataSet1"
+    },
+    "_:id9": {
+      "prov:entity": "ex:composition",
+      "prov:activity": "ex:illustrate"
+    },
+    "_:id5": {
+      "prov:role": "ex:regionsToAggregateBy",
+      "prov:activity": "ex:compose",
+      "prov:entity": "ex:regionList"
+    },
+    "_:id8": {
+      "prov:entity": "ex:regionList",
+      "prov:activity": "ex:compose"
+    },
+    "_:id7": {
+      "prov:entity": "ex:dataSet1",
+      "prov:activity": "ex:compose"
+    },
+    "_:id6": {
+      "prov:entity": "ex:dataSet1",
+      "prov:activity": "ex:correct"
+    }
+  },
+  "prefix": {
+    "ex": "http://example/",
+    "exg": "http://www.provbook.org/",
+    "dcterms": "http://purl.org/dc/terms/",
+    "foaf": "http://xmlns.com/foaf/0.1/"
+  },
+  "wasDerivedFrom": {
+    "_:id22": {
+      "prov:usedEntity": "ex:dataSet1",
+      "prov:generatedEntity": "ex:articleV1"
+    },
+    "_:id3": {
+      "prov:usedEntity": "ex:dataSet1",
+      "prov:type": {
+        "type": "prov:QUALIFIED_NAME",
+        "$": "prov:Revision"
+      },
+      "prov:generatedEntity": "ex:dataSet2"
+    },
+    "_:id23": {
+      "prov:usedEntity": "ex:dataSet2",
+      "prov:generatedEntity": "ex:articleV2"
+    },
+    "_:id2": {
+      "prov:usedEntity": "ex:article",
+      "prov:type": {
+        "type": "prov:QUALIFIED_NAME",
+        "$": "prov:Quotation"
+      },
+      "prov:generatedEntity": "ex:blogEntry"
+    },
+    "_:id1": {
+      "prov:usedEntity": "ex:dataSet2",
+      "prov:generatedEntity": "ex:chart2"
+    }
+  },
+  "entity": {
+    "ex:blogEntry": {},
+    "ex:article": {
+      "dcterms:title": "Crime rises in cities"
+    },
+    "ex:regionList": {},
+    "ex:chart2": {},
+    "ex:chart1": {},
+    "ex:dataSet2": {},
+    "ex:composition": {},
+    "ex:articleV1": {},
+    "ex:articleV2": {},
+    "ex:dataSet1": {}
+  }
+}
