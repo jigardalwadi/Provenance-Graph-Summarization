@@ -1,0 +1,343 @@
+<!doctype html>
+
+<meta charset="utf-8">
+<title>Dagre D3 : provenance graph</title>
+
+<link rel="stylesheet" href="demo.css">
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="../build/dist/dagre-d3.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<h1>Dagre D3: provenance graph</h1>
+
+<!-- <button type="button" id="bar" href="#" onclick="temp()">Click Me!</button> -->
+
+<button onclick="function1()">Shows or hide</button>
+
+
+
+
+<link rel="stylesheet" href="tipsy.css">
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="tipsy.js"></script>
+<script src="provgraph.js"></script>
+<script src="acyclictrysent.js"></script>
+
+<svg id="svg" width="100%" height="100%" ></svg>
+
+
+<style id="css">
+svg {
+    overflow: hidden;
+	width: 1000;
+	margin: left-side;	
+}
+
+.clusters rect {
+  fill: #00ffd0;
+  stroke: #999;
+  stroke-width: 1.5px;
+}
+
+text {
+  font-weight: 300;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
+  font-size: 14px;
+}
+
+.node rect {
+  stroke: #999;
+  fill: #87bbe1;
+  stroke-width: 1.5px;
+}
+
+
+.node ellipse {
+  stroke: #999;
+  fill: #f3db4a;
+  stroke-width: 1.5px;
+}
+
+.node polygon {
+  stroke: #999;
+  fill: #fff;
+  stroke-width: 1.5px;
+}
+
+.edgePath path {
+  stroke: #333;
+  stroke-width: 1.5px;
+}
+
+
+/* This styles the title of the tooltip */
+.tipsy tipsy-s{
+display: block;
+opacity: 1.0;
+fade: true;
+}
+
+
+
+
+/* This styles the body of the tooltip */
+.tipsy .description {
+  font-size: 1.2em;
+  
+}
+.tipsy-inner {
+    max-width: 500px;
+	height: relative;
+	text-align: center;
+	overflow: hidden;
+    /* If max-width does not work, try using width instead */
+    
+}
+
+/* This styles the title of the tooltip */
+.tipsy .name {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #60b1fc;
+  margin: 0;
+}
+
+
+
+
+</style>
+
+
+<script type="text/javascript" src="article-prov2.json"></script>
+
+<script src="http://cdn.jsdelivr.net/g/filesaver.js"></script>
+
+
+
+
+
+<script>
+var g = new dagreD3.graphlib.Graph({compound:true})
+  .setGraph({})
+  .setDefaultEdgeLabel(function() { return {}; });
+  
+//g.graph(); // returns undefined
+//var m = g.setGraph("graph-label");
+//g.graph(); // returns "graph-label" 
+
+
+
+var entityKeys = []
+var activityKeys = []
+var agentKeys = []
+var time = []
+var type = []
+var entdescrption = []
+
+createentity(val)
+activity(val)
+agent(val)
+wasDerivedFrom()
+wasAttributedTo()
+alternateOf()
+specializationOf()
+wasAssociatedWith()
+wasGeneratedBy()
+used()
+actedOnBehalfOf()
+
+
+
+
+ 
+
+
+init(g);
+
+aa=0;
+newgrpchild = [];
+newgrpparent = [];
+flag1 = true;
+d3.selectAll("g.node").on("click", function(id) { 
+z = 0;
+nooutcluster = [];
+noincluster = [];
+
+if(flag1 == true){
+	for(var x in grp){
+	console.log("fla = "+flag)
+		for(var y in g.successors(grp[x])){
+			if(g.predecessors(g.successors(grp[x])[y]).length <2	 ){
+				var s = g.predecessors(g.successors(grp[x])[y]);
+				newgrpchild.push(s[0]);
+				//console.log("newgrpchild "+ newgrpchild);
+				//console.log(id);
+				if(newgrpchild.indexOf(id) >= 0 ){
+					console.log("setting parent of ");
+					for(var xx in newgrpchild){
+						if(g.parent(newgrpchild[xx]) == undefined){
+						g.setNode(xx,{label: z+x});
+						g.setParent(newgrpchild[xx],xx);
+						}
+						
+					}
+					z++;
+					//console.log(z +"fla = "+flag1)
+				}
+			}
+		//console.log("parent  "+g.predecessors(g.successors(grp[x])[y]).length)
+		//console.log(grp)
+		}
+		
+	
+	}
+	for(var a in allnodes){
+		if(g.successors(allnodes[a]).length == 1 && g.predecessors(allnodes[a]).length < 1 ){
+		newgrpparent.push(allnodes[a]);
+		console.log('newgrpparent'+newgrpparent);
+			if(newgrpparent.indexOf(id) >= 0 && g.parent(id)== undefined){
+				g.setNode(a,{label: a});
+				if(g.parent(newgrpparent[a])== undefined){
+					g.setParent(newgrpparent[a],a);
+					noincluster.push(a);
+					a++;
+				}
+				console.log("aa")
+			}
+	
+	console.log(newgrpparent);
+		}
+
+	}
+	flag1 = false;
+	init(g);
+}
+	//var _node = g.node(id); 
+else{	
+	 console.log("Clicked " + noout); 
+	
+	for(var x in newgrpchild){
+		var succ = g.successors(newgrpchild[x]);
+	//	console.log(succ)
+		for(var y in succ){
+			if(noout.indexOf(succ[y])>=0  && g.predecessors(succ[y]).length < 2){
+				var par = g.parent(newgrpchild[x]);
+				g.setParent(succ[y],par);
+				console.log("a");
+			}
+		}
+	
+	}
+	for(var z in newgrpparent){
+		var chi = g.successors(newgrpparent[z]);
+		g.setParent(chi,g.parent(newgrpparent[z]));
+		console.log("b");
+	}
+	
+	console.log("befoe"+flag1);
+	init(g); 
+	flag1 =true;
+	console.log("after"+flag1);
+}
+}
+
+);
+
+
+
+	
+
+d3.selectAll("g.node").on("click", function(id) {
+
+console.log(g.nodeCount());
+if(g.parent(id) == undefined){
+		g.setNode(aa,{label: aa});
+		g.setParent(id,aa);
+		
+		console.log(g.nodeCount());
+		successor = g.successors(id);
+		console.log(g.successors(id));
+		for(var ab in successor){
+			g.setParent(successor[ab], g.parent(id));
+			console.log("aasfs");
+		}
+		
+}
+else{
+successor = g.successors(id);
+parent = g.parent(id);
+	for(var ba in successor){
+		if(g.parent(successor[id])==undefined){
+		g.setParent(successor[ba],parent);
+		console.log("aasfs");
+		}
+	}
+}
+aa++;
+init(g);
+});
+
+
+
+
+
+function init(g) {
+
+
+ $('g.cluster').tipsy({ 
+        gravity: 's', 
+        html: true,
+		opacity: 0.8,
+		
+		title: function() {
+		    return tempw; 
+		}
+    });
+
+
+g.nodes().forEach(function(v) {
+  var node = g.node(v);
+  // Round the corners of the nodes
+  node.rx = node.ry = 5;
+});  
+// Create the renderer
+var render = new dagreD3.render();
+
+// Set up an SVG group so that we can translate the final graph.
+var svg = d3.select("svg"),
+    svgGroup = svg.append("g");
+
+// Run the renderer. This is what draws the final graph.
+render(d3.select("svg g"), g);
+
+// Center the graph
+var xCenterOffset = (svg.attr("width") - g.graph().width) / 4;
+svgGroup.attr("transform", "translate(" + xCenterOffset + ", 10)");
+svg.attr("height", g.graph().height + 10);
+
+
+
+
+
+
+
+
+
+	
+// Set up zoom support
+var svg = d3.select("svg"),
+
+    inner = d3.select("svg g"),
+    zoom = d3.behavior.zoom().on("zoom", function() {
+      inner.attr("transform", "translate(" + d3.event.translate + ")" +
+                                  "scale(" + d3.event.scale + ")");
+    });
+svg.call(zoom);
+}
+
+
+
+
+
+
+</script>

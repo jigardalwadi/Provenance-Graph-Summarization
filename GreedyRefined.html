@@ -1,0 +1,543 @@
+<!doctype html>
+
+<meta charset="utf-8">
+<title>Dagre D3 : provenance graph</title>
+
+<link rel="stylesheet" href="demo.css">
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="../build/dist/dagre-d3.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<h1>Dagre D3: provenance graph</h1>
+
+<!-- <button type="button" id="bar" href="#" onclick="temp()">Click Me!</button> -->
+
+<button onclick="function1()">Shows or hide</button>
+
+
+
+
+<link rel="stylesheet" href="tipsy.css">
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="tipsy.js"></script>
+<script src="provgraph.js"></script>
+<!-- <script src="relations.js"></script> -->
+<script src="acyclictrysent.js"></script>
+
+
+
+<style id="css">
+svg {
+    overflow: hidden;
+	width: 1000;
+	margin: left-side;	
+}
+
+.clusters rect {
+  fill: #00ffd0;
+  stroke: #999;
+  stroke-width: 1.5px;
+}
+
+text {
+  font-weight: 300;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
+  font-size: 14px;
+}
+
+.node rect {
+  stroke: #999;
+  fill: #87bbe1;
+  stroke-width: 1.5px;
+}
+
+
+.node ellipse {
+  stroke: #999;
+  fill: #f3db4a;
+  stroke-width: 1.5px;
+}
+
+.node polygon {
+  stroke: #999;
+  fill: #fff;
+  stroke-width: 1.5px;
+}
+
+.edgePath path {
+  stroke: #333;
+  stroke-width: 1.5px;
+}
+
+
+/* This styles the title of the tooltip */
+.tipsy tipsy-s{
+display: block;
+opacity: 1.0;
+fade: true;
+}
+
+
+
+
+/* This styles the body of the tooltip */
+.tipsy .description {
+  font-size: 1.2em;
+  
+}
+.tipsy-inner {
+    max-width: 500px;
+	height: relative;
+	text-align: center;
+	overflow: hidden;
+    /* If max-width does not work, try using width instead */
+    
+}
+
+/* This styles the title of the tooltip */
+.tipsy .name {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #60b1fc;
+  margin: 0;
+}
+
+
+
+
+</style>
+
+<svg id="svg" width="100%" height="100%" ></svg>
+
+<script type="text/javascript" src="article-prov1.json"></script>
+
+<script src="http://cdn.jsdelivr.net/g/filesaver.js"></script>
+
+
+
+
+
+<script>
+var g = new dagreD3.graphlib.Graph({compound:true})
+  .setGraph({})
+  .setDefaultEdgeLabel(function() { return {}; });
+  
+//g.graph(); // returns undefined
+//var m = g.setGraph("graph-label");
+//g.graph(); // returns "graph-label" 
+
+
+
+var entityKeys = []
+var activityKeys = []
+var agentKeys = []
+var time = []
+var type = []
+var entdescrption = []
+
+createentity(val)
+activity(val)
+agent(val)
+//addNodes(val)
+wasDerivedFrom()
+wasAttributedTo()
+alternateOf()
+specializationOf()
+wasAssociatedWith()
+wasGeneratedBy()
+used()
+actedOnBehalfOf()
+
+
+
+
+
+// allnodes contains all the nodes from the graph
+var allnodes = [];
+allnodes = allnodes.concat(entityKeys, activityKeys, agentKeys, time, entdescrption);
+   
+var V = g.nodeCount();
+var E = g.edgeCount();
+console.log(V +" " + E)
+console.log(allnodes)
+
+var k = 5; 
+var numberofgroups = k;
+var partitions = Acyclic(V,E,k);
+console.log(partitions);
+creategrACYCLIC(partitions,allnodes);
+
+
+
+
+
+
+<!-- var part2 = []; -->
+
+<!-- for(var i in partitions){ -->
+	<!-- var count = 0;	 -->
+	<!-- for(var j in partitions[i]){ -->
+		<!-- //console.log("node"+ "  "+allnodes[partitions[i][j]]) -->
+		<!-- var pred = g.predecessors(allnodes[partitions[i][j]]);		 -->
+		<!-- //console.log("parent"+ "  " + pred) -->
+		<!-- if(pred.length <= 0){ -->
+			<!-- count++; -->
+		<!-- } -->
+		<!-- else{	 -->
+			<!-- var cnt = 0; -->
+			<!-- for(var k in pred){ -->
+				<!-- if(g.parent(pred[k]) == i){ -->
+					<!-- cnt++; -->
+				<!-- } -->
+				<!-- if(cnt == pred.length){ -->
+					<!-- count++; -->
+				<!-- } -->
+			<!-- } -->
+		<!-- } -->
+		<!-- if(count == partitions[i].length){ -->
+			<!-- part2.push(part[i]);  -->
+			<!-- console.log(part2); -->
+		<!-- } -->
+	<!-- //console.log(count); -->
+	<!-- } -->
+<!-- } -->
+<!-- console.log(part2); -->
+<!-- var copy = part2; -->
+
+<!-- function rearrange(){ -->
+	<!-- for(var x in copy){ -->
+		<!-- for(var y in copy[x]){ -->
+			<!-- var chi =allnodes[copy[x][y]]; -->
+			<!-- var child = g.successors(chi); -->
+			<!-- if(child.length >0){ -->
+				<!-- for(var z in child){ -->
+					<!-- var par = g.parent(child[z]); -->
+					<!-- if(copy.indexOf(part[par])<0){ -->
+						<!-- part2.push(part[par]); -->
+						<!-- copy = part2; -->
+					<!-- } -->
+				<!-- } -->
+			<!-- } -->
+			
+		<!-- }		 -->
+	<!-- } -->
+
+<!-- } -->
+
+<!-- rearrange(); -->
+<!-- if(copy.length < part.length){ -->
+	<!-- rearrange(); -->
+<!-- } -->
+
+<!-- console.log(part2) -->
+
+
+var edgecut = edgexcut(allnodes)
+console.log(edgecut)
+
+
+
+ 
+var partitionsReined = TopologicalRefinement(V,E,partitions,numberofgroups,partitions);
+console.log(partitionsReined);
+createReinedGroup(partitionsReined,k,);
+
+var newededgexcut = edgexcut(allnodes);
+console.log(newededgexcut)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+var noout = [];
+var yesout = [];
+
+for(var x in allnodes){
+	if(g.outEdges(allnodes[x]) == 0){
+	noout.push(allnodes[x]);
+	}else {
+	yesout.push(allnodes[x])
+	}
+}
+var grp = [];
+for(var x in noout){
+	for(var y in g.predecessors(noout[x])){
+		if(grp.indexOf(g.predecessors(noout[x])[y])<0){
+			grp.push(g.predecessors(noout[x])[y])
+		}
+	}
+}		
+
+
+
+
+
+var MaximunOccurence = countmaxedges();
+console.log(MaximunOccurence)
+var x1;
+function countmaxedges()
+{
+	var countarray = [];
+	for(var entity in entityKeys)
+	{
+		
+		x1 = g.outEdges(entityKeys[entity]).length;
+		countarray[entity] = x1;
+	}
+	var v = mode(countarray);
+	function mode(array)
+	{
+		if(array.length == 0)
+			return null;
+			var modeMap = {};
+			var maxEl = array[0], maxCount = 1;
+			for(var i = 0; i < array.length; i++)
+			{
+				var el = array[i];
+				if(modeMap[el] == null)
+					modeMap[el] = 1;
+				else
+					modeMap[el]++;  
+					if(modeMap[el] > maxCount)
+					{
+						maxEl = el;
+						maxCount = modeMap[el];
+					}
+			}
+		return maxEl;
+	}
+	return v;
+}
+
+
+
+ 
+
+
+//g.setNode('top_group', {label: 'Top part', clusterLabelPos: 'bottom', style: 'fill: #ffd47f'});
+
+var outedgesfornode1 = [];
+
+var count = 0;
+temp= [];
+tempw = [];
+flag = false;
+
+function function1(){
+	var count1 = count % 2;
+	if(flag == false)
+	{
+		if(count1 == 0)
+		{
+			for(var entity in entityKeys)
+			{
+				if(g.outEdges(entityKeys[entity]) &&  g.outEdges(entityKeys[entity]).length  ==  MaximunOccurence)
+				{
+					for(var item in g.outEdges(entityKeys[entity])) 
+					{
+						temp = g.outEdges(entityKeys[entity])[item].w
+						if(tempw.indexOf(g.outEdges(entityKeys[entity])[item].v) < 0) 
+						{
+						tempw.push(g.outEdges(entityKeys[entity])[item].v)
+						} 
+						if(outedgesfornode1.indexOf(temp) < 0)
+						{
+							outedgesfornode1.push(temp)
+						}	
+					}
+					g.setParent(entityKeys[entity],"top_group") 
+				}
+			}	
+		}
+		else{
+			
+			g.removeNode('a');
+			
+			console.log(val);
+			createentity(val)
+			wasDerivedFrom()
+			wasAttributedTo()
+			alternateOf()
+			specializationOf()
+			wasAssociatedWith()
+			wasGeneratedBy()
+			used()
+			console.log(g.nodeCount());
+			//init(g)
+			
+		}
+		flag = true;
+	} 	
+	else
+	{
+		console.log(count1);
+		for(var entity in entityKeys)
+		{
+				if(g.outEdges(entityKeys[entity]) && g.outEdges(entityKeys[entity]).length == MaximunOccurence)
+					g.removeNode(entityKeys[entity]);
+					g.setNode('a', {label: 'Gr then three	'})
+					g.setParent('a',"top_group");
+					
+					for(var item in g.outEdges(entityKeys[entity])) 
+					{
+						temp = g.outEdges(entityKeys[entity])[item].w
+						g.setEdge("a",temp,{label: 'new edges'});
+						//console.log(temp);
+
+					} 
+				
+		} 
+		console.log(g.nodeCount());
+		console.log(g.edgeCount());
+		count++; 
+		flag = false;
+		 
+	}
+init(g); 
+
+//	console.log(g1)
+}
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+<!-- var treeedges = []; -->
+<!-- for(var x in indexednode){ -->
+	<!-- for(var y in g.successors(indexednode[x].nodename)){ -->
+		<!-- var edges = {u: indexednode[x].nodename , v: g.successors(indexednode[x].nodename)[y]}; -->
+		<!-- treeedges.push(edges); -->
+	<!-- } -->
+<!-- } -->
+
+<!-- var tree = []; -->
+
+<!-- function Point(x, y) { -->
+  <!-- var v = x; -->
+  <!-- var e = y; -->
+  <!-- var z = {v , e}; -->
+  <!-- console.log(z); -->
+  <!-- tree.push(z); -->
+<!-- } -->
+
+
+<!-- for(var x in treeedges){ -->
+	<!-- var p= new Point((allnodes.indexOf(treeedges[x].u))+1 , (allnodes.indexOf(treeedges[x].v))+1); -->
+<!-- }  -->
+
+ 
+ 
+$('#savefile').click(function(){
+	var blob = new Blob(["tree"],{type: "text/plain;charset=utf-8"});
+	saveAs(blob,"tree.txt");
+});
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+
+init(g);
+
+aa=0;
+
+function init(g) {
+
+
+ $('g.cluster').tipsy({ 
+        gravity: 's', 
+        html: true,
+		opacity: 0.8,
+		
+		title: function() {
+		    return tempw; 
+		}
+    });
+
+
+g.nodes().forEach(function(v) {
+  var node = g.node(v);
+  // Round the corners of the nodes
+  node.rx = node.ry = 5;
+});  
+// Create the renderer
+var render = new dagreD3.render();
+
+// Set up an SVG group so that we can translate the final graph.
+var svg = d3.select("svg"),
+    svgGroup = svg.append("g");
+
+// Run the renderer. This is what draws the final graph.
+render(d3.select("svg g"), g);
+
+// Center the graph
+var xCenterOffset = (svg.attr("width") - g.graph().width) / 4;
+svgGroup.attr("transform", "translate(" + xCenterOffset + ", 10)");
+svg.attr("height", g.graph().height + 10);
+
+
+
+
+
+
+
+
+
+	
+// Set up zoom support
+var svg = d3.select("svg"),
+
+    inner = d3.select("svg g"),
+    zoom = d3.behavior.zoom().on("zoom", function() {
+      inner.attr("transform", "translate(" + d3.event.translate + ")" +
+                                  "scale(" + d3.event.scale + ")");
+    });
+svg.call(zoom);
+}
+
+
+</script>
