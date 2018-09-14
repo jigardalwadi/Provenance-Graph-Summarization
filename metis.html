@@ -165,43 +165,7 @@ var E = g.edgeCount();
 
  
  
-<!-- var treeedges = []; -->
-<!-- for(var x in indexednode){ -->
-	<!-- for(var y in g.successors(indexednode[x].nodename)){ -->
-		<!-- var edges = {u: indexednode[x].nodename , v: g.successors(indexednode[x].nodename)[y]}; -->
-		<!-- treeedges.push(edges); -->
-	<!-- } -->
-<!-- } -->
 
-<!-- var tree = []; -->
-
-<!-- function Point(x, y) { -->
-  <!-- var v = x; -->
-  <!-- var e = y; -->
-  <!-- var z = {v , e}; -->
-  <!-- console.log(z); -->
-  <!-- tree.push(z); -->
-<!-- } -->
-
-
-<!-- for(var x in treeedges){ -->
-	<!-- var p= new Point((allnodes.indexOf(treeedges[x].u))+1 , (allnodes.indexOf(treeedges[x].v))+1); -->
-<!-- }  -->
-
- 
-<!-- var file = new File(tree, 'tree.txt', { -->
-    <!-- lastModified: new Date(0), // optional - default = now -->
-    <!-- type: "overide/mimetype" // optional - default = '' -->
-<!-- });  -->
- 
-//var fr = new FileReader();
- 
- 
-<!-- $('#savefile').click(function(){ -->
-	<!-- var blob = new Blob(["tree"],{type: "text/plain;charset=utf-8"}); -->
-	<!-- saveAs(blob,"tree.txt"); -->
-<!-- }); -->
- 
  var indexednode = [];	
 for(var x in allnodes){
 	var indexed = {
@@ -257,15 +221,11 @@ function SaveAsFile(t,f,m) {
 			saveAs(b, f);
 		}
 SaveAsFile(list,"filename.graph","text/plain;charset=ASCII");
-	
-	 
-	 
-	 
 	 
 	 
 var groped = [];
 var new_grp = [];
-$.getScript("C:\\Users\\jigar\\Koop\\project 1\\metis-pk\\build\\windows\\programs\\Release\\filename.js")
+$.getScript("metis created graph")
   .done(function() {
     	Array.prototype.unique = function() {
     var arr = [];
@@ -326,13 +286,6 @@ init(g);
 });
   
 
- 
- 
- 
- 
- 
-
- 
 
 
 init(g);
