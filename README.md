@@ -1,2 +1,3 @@
 # Provenance-Graph-Summarization
-To summarize the prove graph there are few algorithms we can implement. 
+To summarize the prove graph I have applied few algorithms.
+
